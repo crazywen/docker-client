@@ -32,6 +32,8 @@ import com.spotify.docker.client.messages.Info;
 import com.spotify.docker.client.messages.RemovedImage;
 import com.spotify.docker.client.messages.Version;
 
+import org.glassfish.jersey.client.ChunkedInput;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -623,6 +625,16 @@ public interface DockerClient extends Closeable {
    */
   LogStream attachContainer(String containerId, AttachParameter... params)
       throws DockerException, InterruptedException;
+
+  /**
+   * Get container stats based on resource usage
+   * @param containerId The id of the container for which to get stats.
+   * @return A log message stream.
+   * @throws ContainerNotFoundException if the container was not found (404).
+   * @throws InterruptedException
+   * @throws DockerException
+   */
+  ChunkedInput stats(String containerId) throws DockerException, InterruptedException;
 
   /**
    * Get the Docker host address

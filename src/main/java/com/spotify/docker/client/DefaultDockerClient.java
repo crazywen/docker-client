@@ -53,6 +53,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.glassfish.hk2.api.MultiException;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.client.ChunkedInput;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
@@ -892,8 +893,8 @@ public class DefaultDockerClient implements DockerClient, Closeable {
 
   @Override
   public LogStream attachContainer(final String containerId,
-                                   final AttachParameter... params) throws DockerException,
-      InterruptedException {
+                                   final AttachParameter... params)
+      throws DockerException, InterruptedException {
     WebTarget resource = resource().path("containers").path(containerId)
         .path("attach");
 
@@ -986,8 +987,8 @@ public class DefaultDockerClient implements DockerClient, Closeable {
 
     try {
       return request(POST, LogStream.class, resource,
-              resource.request("application/vnd.docker.raw-stream"),
-              Entity.json(writer.toString()));
+                     resource.request("application/vnd.docker.raw-stream"),
+                     Entity.json(writer.toString()));
     } catch (DockerRequestException e) {
       switch (e.status()) {
         case 404:
@@ -1012,6 +1013,24 @@ public class DefaultDockerClient implements DockerClient, Closeable {
           throw e;
       }
     }
+  }
+
+  @Override
+  public ChunkedInput<String> stats(final String containerId)
+      throws DockerException, InterruptedException {
+    WebTarget resource = resource().path("containers").path(containerId).path("stats");
+
+//    try {
+//      return (ChunkedInput<String>)request(GET, ChunkedInput.class, resource, resource.request(APPLICATION_JSON_TYPE));
+      return resource.request().get().readEntity(new GenericType<ChunkedInput<String>>() {});
+//    } catch (DockerRequestException e) {
+//      switch (e.status()) {
+//        case 404:
+//          throw new ContainerNotFoundException(containerId);
+//        default:
+//          throw e;
+//      }
+//    }
   }
 
   private WebTarget resource() {
