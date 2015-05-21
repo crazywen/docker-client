@@ -56,6 +56,8 @@ public interface DockerClient extends Closeable {
 
   /**
    * Get the docker version.
+   *
+   * @return docker version
    * @throws DockerException if a server error occurred (500)
    * @throws InterruptedException If the thread is interrupted
    */
@@ -63,6 +65,8 @@ public interface DockerClient extends Closeable {
 
   /**
    * Check auth configuration.
+   *
+   * @return status code of auth request
    * @throws DockerException if a server error occurred (500)
    * @throws InterruptedException If the thread is interrupted
    */
@@ -70,6 +74,8 @@ public interface DockerClient extends Closeable {
 
   /**
    * Get docker instance information.
+   *
+   * @return docker info
    * @throws DockerException if a server error occurred (500)
    * @throws InterruptedException If the thread is interrupted
    */
@@ -510,6 +516,7 @@ public interface DockerClient extends Closeable {
    *
    * @param containerId The id of the container
    * @param cmd shell command
+   * @param params Exec params
    * @return exec id
    * @throws DockerException if a server error occurred (500)
    * @throws InterruptedException If the thread is interrupted
@@ -541,6 +548,7 @@ public interface DockerClient extends Closeable {
    * Otherwise, this API sets up an interactive session with the exec command.
    *
    * @param execId exec id
+   * @param params Exec start params
    * @return exec output
    * @throws DockerException if a server error occurred (500)
    * @throws InterruptedException If the thread is interrupted
@@ -737,6 +745,8 @@ public interface DockerClient extends Closeable {
 
     /**
      * Parameter name.
+     *
+     * @return name of parameter
      */
     public String name() {
       return name;
@@ -744,6 +754,8 @@ public interface DockerClient extends Closeable {
 
     /**
      * Parameter value.
+     *
+     * @return value of parameter
      */
     public String value() {
       return value;
@@ -751,6 +763,8 @@ public interface DockerClient extends Closeable {
 
     /**
      * Show all images. Only intermediate image layers are shown by default.
+     *
+     * @return ListImagesParam
      */
     public static ListImagesParam allImages() {
       return allImages(true);
@@ -758,6 +772,9 @@ public interface DockerClient extends Closeable {
 
     /**
      * Show all images. Only intermediate image layers are shown by default.
+     *
+     * @param all Whether to list all images
+     * @return ListImagesParam
      */
     public static ListImagesParam allImages(final boolean all) {
       return create("all", String.valueOf(all));
@@ -766,6 +783,8 @@ public interface DockerClient extends Closeable {
     /**
      * Show dangling images only. A dangling image is one which does not have a repository name.
      * By default both dangling and non-dangling will be shown.
+     *
+     * @return ListImagesParam
      */
     public static ListImagesParam danglingImages() {
       return danglingImages(true);
@@ -773,6 +792,9 @@ public interface DockerClient extends Closeable {
 
     /**
      * Enable or disable dangling image filter.
+     *
+     * @param dangling Whether to list dangling images
+     * @return ListImagesParam
      */
     public static ListImagesParam danglingImages(final boolean dangling) {
       return filter("dangling", String.valueOf(dangling));
@@ -780,6 +802,10 @@ public interface DockerClient extends Closeable {
 
     /**
      * Create a custom filter.
+     *
+     * @param name of filter
+     * @param value of filter
+     * @return ListImagesParam
      */
     public static ListImagesParam filter(final String name, final String value) {
       return new ListImagesFilterParam(name, value);
@@ -787,6 +813,10 @@ public interface DockerClient extends Closeable {
 
     /**
      * Create a custom parameter.
+     *
+     * @param name of parameter
+     * @param value of parameter
+     * @return ListImagesParam
      */
     public static ListImagesParam create(final String name, final String value) {
       return new ListImagesParam(name, value);
